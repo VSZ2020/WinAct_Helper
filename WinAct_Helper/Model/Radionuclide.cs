@@ -8,7 +8,7 @@ namespace WinAct_Helper.Model
 {
     public class Radionuclide
     {
-        const int MAX_NAME_LENGTH = 10;
+        const int MAX_NAME_LENGTH = 15;
         private string _name = "";
 
         public string Name
@@ -22,7 +22,7 @@ namespace WinAct_Helper.Model
         /// <summary>
         /// Nuclide Half-Life in days (d)
         /// </summary>
-        public double HalfTime;
+        public double HalfTime { get; set; }
 
         public Radionuclide(string name, double halftime)
         {

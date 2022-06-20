@@ -47,7 +47,7 @@ namespace WinAct_Helper
         private void LoadDefaultInput()
         {
             InputFileProperty = (new DefaultDataController(RadionuclidesProperty)).CreateDefaultInput();
-            InputFileProperty.IsModified = true;
+            UpdateModifiedStatus(true);
         }
     }
 }

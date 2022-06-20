@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WinAct_Helper.Controller;
+using WinAct_Helper.Model;
 
-namespace WinAct_Helper.Model
+namespace WinAct_Helper.Controller
 {
-    internal class FileDefaultService : IFileService
+    public class FileDefaultService : IFileService
     {
         private IFileIO _fileIOController;
         private IValidationErrors _validationErrors;
@@ -46,7 +47,10 @@ namespace WinAct_Helper.Model
         public bool WriteFile(string outFileName, InputFile file)
         {
             if (!ValidateFields(file))
+            {
+                Trace.WriteLine("Errors occured during validation procedure!");
                 return false;
+            }
             _fileIOController.WriteFile(outFileName, file);
             return true;
         }

@@ -22,12 +22,25 @@ namespace WinAct_Helper.Model
         /// Short name of current file
         /// </summary>
         public string FileName { get; set; }
+
+        public string FullPath
+        {
+            get
+            {
+                return _filePath;
+            }
+            set
+            {
+                _filePath = !string.IsNullOrEmpty(value) ? value: _filePath;
+            }
+        }
         
         public Radionuclide Radionuclide { get; private set; }
         /// <summary>
         /// Note at the start of WinAct file (first 2 lines)
         /// </summary>
-        public string? Comment { get; set; }
+        public string? Comment_1 { get; set; }
+        public string? Comment_2 { get; set; }
         /// <summary>
         /// Flag for checking file fields modification
         /// </summary>
@@ -44,7 +57,7 @@ namespace WinAct_Helper.Model
         /// </summary>
         /// <param name="FilePath"></param>
         /// <param name="FileReader"></param>
-        public InputFile(string FilePath, IFileIO FileReader)
+        public InputFile(string FilePath, IFileService FileReader)
         {
             FileName = GetFileName(FilePath);
             ReadFromFile(FileReader, FilePath);
@@ -68,18 +81,34 @@ namespace WinAct_Helper.Model
             Transfers = transfs;
         }
 
-        public void ReadFromFile(IFileIO FileReader, string path)
+        public bool ReadFromFile(IFileService FileReader, string path)
         {
-            if (File.Exists(path))
-                throw new IOException($"File {path} doesn't exist");
+            if (!File.Exists(path))
+            {
+                //throw new IOException($"File {path} doesn't exist");
+                return false;
+            }
             var file = FileReader.ReadFile(path);
 
-            if (file.Radionuclide != null)
-                this.Radionuclide = file.Radionuclide;
-            if (file.Compartments != null)
-                this.Compartments = file.Compartments;
-            if (file.Transfers != null)
-                this.Transfers = file.Transfers;
+            if (file.Radionuclide == null ||
+                file.Compartments == null ||
+                file.Transfers == null)
+                return false;
+
+            this.Radionuclide = file.Radionuclide;
+            this.Compartments = file.Compartments;
+            this.Transfers = file.Transfers;
+            this._filePath = path;
+            this.Comment_1 = file.Comment_1;
+            this.Comment_2 = file.Comment_2;
+            return true;
+        }
+
+        public void SaveTofile(IFileService fileService, string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                path = _filePath;
+            fileService.WriteFile(path, this);
         }
 
         private string GetFileName(string path)
@@ -89,6 +118,25 @@ namespace WinAct_Helper.Model
                 return Path.GetFileNameWithoutExtension(path);
             }
             return path;
+        }
+
+        public InputFile Copy()
+        {
+            var compartments = new List<Compartment>(this.Compartments.Count);
+            var transfers = new List<Transfer>(this.Transfers.Count);
+            for (int i = 0; i < Compartments.Count; i++)
+            {
+                compartments.Add(this.Compartments[i]);
+            }
+            for (int j = 0; j < Transfers.Count; j++)
+            {
+                transfers.Add(this.Transfers[j]);
+            }
+            return new InputFile(
+                this._filePath,
+                this.Radionuclide,
+                compartments,
+                transfers);
         }
     }
 }

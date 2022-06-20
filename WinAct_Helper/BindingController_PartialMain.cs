@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+
+using WinAct_Helper.Controller;
 using WinAct_Helper.Forms;
 using WinAct_Helper.Model;
 
@@ -17,6 +20,7 @@ namespace WinAct_Helper
             this.DataContext = this;
             if (RadionuclidesProperty.Nuclides.Count > 0)
                 cBoxRadionuclides.SelectedIndex = 0;
+            
         }
 
         private void SetButtonEventHandlers()
@@ -35,102 +39,137 @@ namespace WinAct_Helper
             btnRemoveTransfer.Click += ButtonRemoveClick;
             btnMenuRemoveCompartment.Click += ButtonRemoveClick;
             btnMenuRemoveTransfer.Click += ButtonRemoveClick;
+
+            btnMenuOpen.Click += ButtonOpenClick;
+            btnMenuSave.Click += ButtonSaveClick;
+            btnMenuSaveAs.Click += ButtonSaveClick;
+
+            btnMenuExit.Click += BtnMenuExit_Click;
+            this.Closing += MainWindow_Closing;
+
+            btnMenuAbout.Click += BtnMenuAbout_Click;
         }
-        /// <summary>
-        /// Arises when button Add (for compartment or transfer) clicked
-        /// </summary>
-        /// <param name="sender">Invoker</param>
-        /// <param name="e"></param>
-        private void ButtonAddClick(object sender, RoutedEventArgs e)
+
+        
+
+        private void UpdateModifiedStatus(bool IsModified)
         {
-            EditItemForm editForm = new EditItemForm();
-            if (sender == btnAddCompartment || sender == btnMenuAddCompartment)
-            {
-                var comp = new Compartment("Undefined", 0.0);
-                editForm.compartment = comp;
-                editForm.ShowDialog();
-                if (!editForm.IsCanceled)
-                    InputFileProperty.Compartments.Add(editForm.compartment);
-                
-            }
-            if (sender == btnAddTransfer || sender == btnMenuAddTransfer)
-            {
-                var trans = new Transfer("Undefined", "Undefined", 0.0);
-                editForm.transfer = trans;
-                editForm.ShowDialog();
-                if (!editForm.IsCanceled)
-                    InputFileProperty.Transfers.Add(editForm.transfer);
-                
-            }
-            lvCompartments.Items?.Refresh();
-            lvTransfers.Items?.Refresh();
+            InputFileProperty.IsModified = IsModified;
+            btnMenuSave.IsEnabled = IsModified;
+
+            var path = InputFileProperty.FullPath;
+            this.Title = String.Concat(
+                IsModified ? "* " : "",
+                "WinAct Input Helper - ",
+                path.Length < 65 ? path : "..." + path.Substring(path.Length - 65, 65));
+            
         }
-        /// <summary>
-        /// Arises when button Edit (for compartment or transfer) clicked
-        /// </summary>
-        /// <param name="sender">Invoker</param>
-        /// <param name="e"></param>
-        private void ButtonEditClick(object sender, RoutedEventArgs e)
+
+        private void OpenWinActFile()
         {
-            EditItemForm editForm = new EditItemForm();
-            if (sender == btnEditCompartment || sender == btnMenuEditCompartment)
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "WinAct Input File (*.inp)|*.inp";
+            dialog.DefaultExt = "*.inp";
+            dialog.Multiselect = false;
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value == true)
             {
-                if (lvCompartments.SelectedIndex == -1)
+                var bufferFile = InputFileProperty.Copy();
+                if (bufferFile.ReadFromFile(new FileDefaultService(new ValidationErrorsKeeper()), dialog.FileName))
                 {
-                    MessageBox.Show("Nothing to edit", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    this.DataContext = null;
+                    InputFileProperty = bufferFile;
+                    this.DataContext = this;
+                    SelectCorrespondingNuclide(InputFileProperty.Radionuclide);
+                    //lvCompartments.Items.Refresh();
+                    //lvTransfers.Items.Refresh();
+                    UpdateModifiedStatus(true);
                 }
-                var index = lvCompartments.SelectedIndex;
-                editForm.compartment = ((Compartment)lvCompartments.SelectedItem).Copy();
-                editForm.ShowDialog();
-                if (!editForm.IsCanceled)
-                    InputFileProperty.Compartments[index] = editForm.compartment;
-            }
-            if (sender == btnEditTransfer || sender == btnMenuEditTransfer)
-            {
-                if (lvTransfers.SelectedIndex == -1)
+                else
                 {
-                    MessageBox.Show("Nothing to edit", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    MessageBox.Show(
+                        $"Can't read current file {dialog.FileName}.\nCheck it!",
+                        "Warning",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
                 }
-                var index = lvTransfers.SelectedIndex;
-                editForm.transfer = ((Transfer)lvTransfers.SelectedItem).Copy();
-                editForm.ShowDialog();
-                if (!editForm.IsCanceled)
-                    InputFileProperty.Transfers[index] = editForm.transfer;
             }
-            lvCompartments.Items?.Refresh();
-            lvTransfers.Items?.Refresh();
         }
-        /// <summary>
-        /// Arises when button Remove (for compartment or transfer) clicked
-        /// </summary>
-        /// <param name="sender">Invoker</param>
-        /// <param name="e"></param>
-        private void ButtonRemoveClick(object sender, RoutedEventArgs e)
+
+        private void SaveWinActFile(bool IsSaveAs)
         {
-            if (sender == btnRemoveCompartment || sender == btnMenuRemoveCompartment)
+            string savePath = "";
+
+            if (IsSaveAs)
             {
-                var index = lvCompartments.SelectedIndex;
-                if (index == -1 || lvCompartments.Items?.Count == 0)
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.AddExtension = true;
+                dialog.Filter = "WinAct Input File (*.inp)|*.inp";
+                dialog.DefaultExt = "*.inp";
+                var result = dialog.ShowDialog();
+                if (result.HasValue && result.Value)
                 {
-                    MessageBox.Show("Nothing to remove", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    savePath = dialog.FileName;
                 }
-                this.InputFileProperty.Compartments.RemoveAt(index);
             }
-            if (sender == btnRemoveTransfer || sender == btnMenuRemoveTransfer)
+            var validator = new ValidationErrorsKeeper();
+            InputFileProperty.SaveTofile(new FileDefaultService(validator), savePath);
+            if (validator.IsValid)
             {
-                var index = lvTransfers.SelectedIndex;
-                if (index == -1 || lvTransfers.Items?.Count == 0)
-                {
-                    MessageBox.Show("Nothing to remove", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-                this.InputFileProperty.Transfers.RemoveAt(index);
+                InputFileProperty.FullPath = savePath;
+                UpdateModifiedStatus(false);
             }
-            lvCompartments.Items?.Refresh();
-            lvTransfers.Items?.Refresh();
+            else
+            {
+                MessageBox.Show(
+                    $"Can't write current file to path {savePath}.\nErrors: {validator.PrintErrors()}",
+                    "Warning",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
+        private void SelectCorrespondingNuclide(Radionuclide nuclide)
+        {
+            bool InList = false;
+            for (int i = 0; i < RadionuclidesProperty.Nuclides.Count; i++)
+            {
+                if (nuclide == RadionuclidesProperty.Nuclides[i])
+                {
+                    InList = true;
+                    cBoxRadionuclides.SelectedItem = RadionuclidesProperty.Nuclides;
+                    break;
+                }
+            }
+            if (!InList)
+            {
+                RadionuclidesProperty.Nuclides.Add(nuclide);
+                cBoxRadionuclides.Items.Refresh();
+                cBoxRadionuclides.SelectedItem = nuclide;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Returns true if the program should be closed</returns>
+        private bool ExitProgramController()
+        {
+            if (InputFileProperty.IsModified)
+            {
+                var result = MessageBox.Show(
+                    "Do you want to save changes?",
+                    "Question",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes: { SaveWinActFile(false); break; }
+                    case MessageBoxResult.No: { break; }
+                    case MessageBoxResult.Cancel: { return false; }
+                }
+            }
+            return true;
         }
     }
 }

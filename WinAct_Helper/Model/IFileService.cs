@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WinAct_Helper.Model
 {
-    internal interface IFileService
+    public interface IFileService
     {
         bool WriteFile(string outFileName, InputFile file);
 

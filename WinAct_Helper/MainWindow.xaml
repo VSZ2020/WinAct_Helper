@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAct_Helper"
         mc:Ignorable="d"
-        Title="WinAct Input Helper" Height="450" Width="784">
+        Title="WinAct Input Helper" Height="530" Width="780" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="23"/>
@@ -59,28 +59,65 @@
                           x:Name="btnMenuAbout"/>
             </MenuItem>
         </Menu>
-        <StackPanel 
+        <Grid 
             Grid.Column="0"
             Grid.Row="1"
             Margin="10,0,5,0">
-            <TextBlock 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Grid.Row="0"
                 Text="Radionuclide"
                 FontWeight="Bold"
+                VerticalAlignment="Bottom"
                 Margin="0,0,0,5"/>
+            <TextBlock
+                Grid.Column="1"
+                Grid.Row="0"
+                Text="Half-Live (days)"
+                FontWeight="Bold"
+                Margin="0,0,0,5"
+                VerticalAlignment="Bottom"/>
             <ComboBox
+                Grid.Column="0"
+                Grid.Row="1"
                 x:Name="cBoxRadionuclides"
                 ItemsSource="{Binding RadionuclidesProperty.Nuclides}"
-                DisplayMemberPath="Name"/>
-        </StackPanel>
+                DisplayMemberPath="Name"
+                VerticalContentAlignment="Center"
+                Margin="0,0,3,0"/>
+            <TextBox
+                Grid.Column="1"
+                Grid.Row="1"
+                x:Name="tboxHalfTime"
+                Text="{Binding ElementName=cBoxRadionuclides, Path=SelectedItem.HalfTime, Mode=Default}"
+                VerticalContentAlignment="Center"/>
+        </Grid>
         <StackPanel Grid.Column="1"
               Grid.Row="1"
               Margin="5,0,10,0">
-                <TextBlock Text="Comment (first 2 lines of file)" 
-                           Margin="0,0,0,5"
-                           FontWeight="Bold"/>
+                <TextBlock Text="Comments (first 2 lines of file)" 
+                           Margin="0,0,0,3"
+                           FontWeight="Bold"
+                           Height="18"/>
                 <TextBox x:Name="tboxComment"
-                         Text="{Binding InputFileProperty.Comment}"
-                         MaxLines="2"/>
+                         Text="{Binding InputFileProperty.Comment_1}"
+                         MaxLines="2"
+                         Margin="0,0,0,3"
+                         Height="21"
+                         VerticalContentAlignment="Center"/>
+                <TextBox x:Name="tboxComment2"
+                         Text="{Binding InputFileProperty.Comment_2}"
+                         MaxLines="1"
+                         Height="21"
+                         VerticalContentAlignment="Center"/>
             </StackPanel>
         <Grid
             Grid.Column="0"
@@ -120,7 +157,7 @@
                     Margin="0,0,2,0"/>
                 <Button 
                     x:Name="btnEditCompartment"
-                    Content="E"
+                    Content="Edit"
                     Grid.Column="1"
                     Margin="0,0,2,0"/>
                 <Button x:Name="btnRemoveCompartment"

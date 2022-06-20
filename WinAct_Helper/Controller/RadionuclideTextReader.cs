@@ -11,7 +11,7 @@ namespace WinAct_Helper.Controller
     {
         public List<Radionuclide> ReadFile(string fileName)
         {
-            var radionuclides = new List<Radionuclide>();
+            var radionuclides = new List<Radionuclide>() { DefaultDataController.GetDefaultRadionuclide()};
             using (StreamReader reader = new StreamReader(fileName))
             {
                 string? line;

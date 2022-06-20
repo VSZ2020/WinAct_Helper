@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WinAct_Helper.Model
 {
-    internal interface IValidationErrors
+    public interface IValidationErrors
     {
         bool IsValid { get; }
         void AddError(string RecordName, string Message);

@@ -3,7 +3,7 @@ using WinAct_Helper.Model;
 
 namespace WinAct_Helper.Controller
 {
-    internal class ValidationErrorsKeeper : IValidationErrors
+    public class ValidationErrorsKeeper : IValidationErrors
     {
         private Dictionary<string, string> _errorsDict;
         public bool IsValid { get => _errorsDict.Count == 0; }
@@ -21,6 +21,13 @@ namespace WinAct_Helper.Controller
             _errorsDict.Clear();
         }
 
+        public string PrintErrors()
+        {
+            string list = "";
+            foreach (var error in _errorsDict)
+                list += string.Concat(error.Key, ": ", error.Value);
+            return list;
+        }
         public ValidationErrorsKeeper()
         {
             _errorsDict = new Dictionary<string, string>();

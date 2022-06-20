@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,13 +22,13 @@ namespace WinAct_Helper.Controller
         public InputFile CreateDefaultInput()
         {
             var input = new InputFile(
-                String.Concat(
-                    System.Environment.CurrentDirectory,
-                    "Untitled.",
-                    DefaultExtensions.INPUT_FILE_EXTENSION),
+                Path.Combine(System.Environment.CurrentDirectory,string.Concat("Untitled.", DefaultExtensions.INPUT_FILE_EXTENSION)),
                 _radionuclides.GetByIndex(0),
                 GetDefaultCompartments(5),
-                GetDefaultTransfers(5)){ Comment = "Default input file", IsModified = true };
+                GetDefaultTransfers(5)){ 
+                Comment_1 = "Default input file", 
+                Comment_2 = "Creation time " + DateTime.Now.ToString("dd.MM.yyyy HH:mm"), 
+                IsModified = true };
             return input;
         }
 
@@ -49,7 +50,7 @@ namespace WinAct_Helper.Controller
 
         public static Radionuclide GetDefaultRadionuclide()
         {
-            return new Radionuclide("", 0.0);
+            return new Radionuclide("Undefined", 0.0);
         }
     }
 }
