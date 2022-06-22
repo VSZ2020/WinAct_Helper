@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAct_Helper.Forms"
         mc:Ignorable="d"
-        Title="EditItemForm" Height="160" Width="476" WindowStartupLocation="CenterScreen">
+        Title="Item editing" Height="160" Width="476" WindowStartupLocation="CenterScreen">
     <Grid
         Margin="10">
         <Grid.RowDefinitions>

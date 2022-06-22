@@ -52,8 +52,6 @@
             <MenuItem Header="?">
                 <MenuItem Header="Help"
                           x:Name="btnMenuHelp"/>
-                <MenuItem Header="Register"
-                          x:Name="btnMenuRegister"/>
                 <Separator/>
                 <MenuItem Header="About"
                           x:Name="btnMenuAbout"/>
