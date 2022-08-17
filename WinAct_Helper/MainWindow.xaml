@@ -48,7 +48,7 @@
                 <MenuItem Header="Remove transfer"
                           x:Name="btnMenuRemoveTransfer"/>
             </MenuItem>
-            <MenuItem Header="Tools"/>
+            <MenuItem Header="Tools" Visibility="Collapsed"/>
             <MenuItem Header="?">
                 <MenuItem Header="Help"
                           x:Name="btnMenuHelp"/>

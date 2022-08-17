@@ -22,7 +22,7 @@ namespace WinAct_Helper.Controller
         public InputFile CreateDefaultInput()
         {
             var input = new InputFile(
-                Path.Combine(System.Environment.CurrentDirectory,string.Concat("Untitled.", DefaultExtensions.INPUT_FILE_EXTENSION)),
+                "",//Path.Combine(System.Environment.CurrentDirectory,string.Concat("Untitled.", DefaultExtensions.INPUT_FILE_EXTENSION)),
                 _radionuclides.GetByIndex(0),
                 GetDefaultCompartments(5),
                 GetDefaultTransfers(5)){ 

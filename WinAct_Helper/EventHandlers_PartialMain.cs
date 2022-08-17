@@ -124,6 +124,11 @@ namespace WinAct_Helper
             lvTransfers.Items?.Refresh();
         }
 
+        private void BtnMenuCreate_Click(object sender, RoutedEventArgs e)
+        {
+            CreateWinActFile();
+        }
+
         private void ButtonOpenClick(object sender, RoutedEventArgs e)
         {
             OpenWinActFile();

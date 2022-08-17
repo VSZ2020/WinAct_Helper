@@ -40,6 +40,7 @@ namespace WinAct_Helper
             btnMenuRemoveCompartment.Click += ButtonRemoveClick;
             btnMenuRemoveTransfer.Click += ButtonRemoveClick;
 
+            btnMenuCreate.Click += BtnMenuCreate_Click;
             btnMenuOpen.Click += ButtonOpenClick;
             btnMenuSave.Click += ButtonSaveClick;
             btnMenuSaveAs.Click += ButtonSaveClick;
@@ -63,6 +64,25 @@ namespace WinAct_Helper
                 "WinAct Input Helper - ",
                 path.Length < 65 ? path : "..." + path.Substring(path.Length - 65, 65));
             
+        }
+
+        private void CreateWinActFile()
+        {
+            if (InputFileProperty != null && InputFileProperty.IsModified)
+            {
+                var result = MessageBox.Show(
+                    "File was changed. Do you want to save changes?",
+                    "Save changes",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Cancel)
+                    return;
+                if (result == MessageBoxResult.Yes)
+                {
+                    SaveWinActFile(false);
+                }
+
+                LoadDefaultInput();
+            }
         }
 
         private void OpenWinActFile()
@@ -100,7 +120,7 @@ namespace WinAct_Helper
         {
             string savePath = "";
 
-            if (IsSaveAs)
+            if (IsSaveAs || string.IsNullOrEmpty(InputFileProperty.FullPath))
             {
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.AddExtension = true;
@@ -111,6 +131,8 @@ namespace WinAct_Helper
                 {
                     savePath = dialog.FileName;
                 }
+                else if (!result.Value) //In case of save Cancelling
+                    return;
             }
             var validator = new ValidationErrorsKeeper();
             InputFileProperty.SaveTofile(new FileDefaultService(validator), savePath);
