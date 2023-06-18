@@ -1,6 +1,6 @@
 # WinAct Helper
 This mini-program allows you to simplify filling of WinAct input files. By default a new file is created at startup. 
-The software documentation preparing is in progress.
+The software [documentation](/VSZ2020/WinAct_Helper/wiki) available on Wiki section.
 
 Keywords: winact, activity calculation, radiation, biokinetic model, winact input
 
