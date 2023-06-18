@@ -4,4 +4,4 @@ The software documentation preparing is in progress.
 
 Keywords: winact, activity calculation, radiation, biokinetic model, winact input
 
-Author: V. Izgagin, the junior researcher in the Insitute of Industrial Ecology.
+Author: IVS (ivs@ecko.uran.ru), the junior researcher in the Insitute of Industrial Ecology.
