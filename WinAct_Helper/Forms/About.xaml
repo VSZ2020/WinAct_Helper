@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAct_Helper.Forms"
         mc:Ignorable="d"
-        Title="About" Height="182" Width="359" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="" Height="182" Width="359" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid
         Margin="10">
         <Grid.ColumnDefinitions>
@@ -34,21 +34,23 @@
             Margin="0,5,0,5"/>
         <StackPanel
             Grid.Row="2">
-            <TextBlock Text="Author: V. Izgagin"
+            <TextBlock Text="Author: IVS"
                        FontSize="10"
                        Margin="0,0,0,2"/>
-            <TextBlock Text="Download page: https://radtools.at.ua"
+            <TextBox Text="Download page: https://github.com/VSZ2020/WinAct_Helper/releases/"
                        FontSize="10"
+                       BorderThickness="0"
                        Foreground="Blue"
                        Margin="0,0,0,2"/>
-            <TextBlock 
+            <TextBox 
                 Text="GitHub project page: https://github.com/VSZ2020/WinAct_Helper"
                 FontSize="10"
                 Foreground="Blue"
+                BorderThickness="0"
                 Margin="0,0,0,2"/>
         </StackPanel>
         <TextBlock
-            Text="All rights protected. 2022"
+            Text="IVS, 2023"
             Grid.Row="3"
             FontStyle="Italic"
             FontSize="8"
