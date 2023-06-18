@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 using WinAct_Helper.Model;
 
 namespace WinAct_Helper.Controller
 {
-    internal class DefaultDataController
+	internal class DefaultDataController
     {
         private Radionuclides _radionuclides;
 
@@ -36,7 +31,7 @@ namespace WinAct_Helper.Controller
         {
             List<Compartment> comps = new List<Compartment>(count);
             for (int i = 0; i < count; i++)
-                comps.Add(new Compartment(string.Concat("Compart ", i+1)));
+                comps.Add(new Compartment(string.Concat("Compart-", i+1)));
             return comps;
         }
 
@@ -44,7 +39,7 @@ namespace WinAct_Helper.Controller
         {
             List<Transfer> transf = new List<Transfer>(count);
             for (int i = 0; i < count; i++)
-                transf.Add(new Transfer(string.Concat("From ", i+1), string.Concat("To ", i+1)));
+                transf.Add(new Transfer(string.Concat("From-", i+1), string.Concat("To-", i+1)));
             return transf;
         }
 

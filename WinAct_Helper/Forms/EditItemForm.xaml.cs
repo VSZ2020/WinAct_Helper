@@ -55,6 +55,9 @@ namespace WinAct_Helper.Forms
             SetButtonsHandler();
         }
 
+        /// <summary>
+        /// Opens correspinding fields to input data for Compartments
+        /// </summary>
         private void SetCompartmentEditMode()
         {
             textFrom.Text = "Compartment name";
@@ -66,7 +69,10 @@ namespace WinAct_Helper.Forms
             tboxTime.Text = _compartment.A0.ToString();
         }
 
-        private void SetTransferEditMode()
+		/// <summary>
+		/// Opens correspinding fields to input data for Transfers
+		/// </summary>
+		private void SetTransferEditMode()
         {
             textTo.IsEnabled = true;
             tboxTo.IsEnabled = true;
@@ -108,7 +114,7 @@ namespace WinAct_Helper.Forms
             else
             {
                 MessageBox.Show(
-                    "Check input fields! There are errors.", 
+                    "Check input fields! There are errors. Check absebse of whitespaces between letters", 
                     "Warning", 
                     MessageBoxButton.OK, 
                     MessageBoxImage.Warning);
@@ -120,7 +126,12 @@ namespace WinAct_Helper.Forms
             double buf_double = 0;
             if (!Double.TryParse(tboxTime.Text, out buf_double) || buf_double < 0.0)
                 return false;
-            if (_compartment != null)
+            if (tboxFrom.Text.Contains(' '))
+                return false;
+			if (tboxTo.Text.Contains(' '))
+				return false;
+
+			if (_compartment != null)
             {
                 _compartment.Name = tboxFrom.Text;
                 _compartment.A0 = buf_double;

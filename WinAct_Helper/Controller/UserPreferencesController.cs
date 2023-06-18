@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using WinAct_Helper.Model;
 
 namespace WinAct_Helper.Controller
 {
-    internal class UserPreferencesController : IUserPreferences
+	internal class UserPreferencesController : IUserPreferences
     {
         public const string PreferencesFileName = "";
         public string PreferencesPath { get; set; }

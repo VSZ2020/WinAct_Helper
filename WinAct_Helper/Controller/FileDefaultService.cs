@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using WinAct_Helper.Model;
 
 namespace WinAct_Helper.Controller
 {
-    public class FileDefaultService : IFileService
+	public class FileDefaultService : IFileService
     {
         private IFileIO _fileIOController;
         private IValidationErrors _validationErrors;

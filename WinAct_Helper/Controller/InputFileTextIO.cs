@@ -11,6 +11,12 @@ namespace WinAct_Helper.Controller
 {
     internal class InputFileTextIO : IFileIO
     {
+        /// <summary>
+        /// Read input file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
         public InputFile ReadFile(string fileName)
         {
             if (!File.Exists(fileName))
@@ -64,6 +70,11 @@ namespace WinAct_Helper.Controller
             return new InputFile(fileName, rNuclide, compartments, transfers) { Comment_1 = inputFileComment[0], Comment_2 = inputFileComment[1] };
         }
 
+        /// <summary>
+        /// Write to input file
+        /// </summary>
+        /// <param name="outFileName"></param>
+        /// <param name="file"></param>
         public void WriteFile(string outFileName, InputFile file)
         {
             //if (!File.Exists(outFileName))
@@ -119,15 +130,23 @@ namespace WinAct_Helper.Controller
             //return DefaultDataController.GetDefaultRadionuclide();
         }
 
+        /// <summary>
+        /// Read compartments from input file
+        /// </summary>
+        /// <param name="sr"></param>
+        /// <returns></returns>
         private List<Compartment> ReadCompartments(StreamReader sr)
         {
             int lineCounter = 0;
-            string line = "";
+            string line;
             var list = new List<Compartment>();
-            while ((line = sr.ReadLine()).IndexOf("END LIST") == -1)
+            while ((line = sr.ReadLine()) != null)
             {
                 lineCounter++;
-                if (string.IsNullOrEmpty(line))
+                if (!string.IsNullOrEmpty(line) && line.IndexOf("END LIST") > -1)
+                    break;
+
+                if (string.IsNullOrWhiteSpace(line))
                     continue;
                 
                 var splittedString = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -137,7 +156,7 @@ namespace WinAct_Helper.Controller
                     Trace.WriteLine($"Incorrect compartment data at line {line}. This line was skipped.");
                     continue;
                 }
-                double compartmentValue = 0.0;
+                double compartmentValue;
                 var compartmentName = splittedString[0].Trim();
                 if (double.TryParse(splittedString[1], out compartmentValue))
                 {
@@ -153,6 +172,12 @@ namespace WinAct_Helper.Controller
             }
             return list;
         }
+
+        /// <summary>
+        /// Read transfers from input file
+        /// </summary>
+        /// <param name="sr"></param>
+        /// <returns></returns>
         private List<Transfer> ReadTransfers(StreamReader sr)
         {
             string line = "";
@@ -171,7 +196,7 @@ namespace WinAct_Helper.Controller
                     Trace.WriteLine($"Incorrect transfer data at line {line}. This line was skipped.");
                     continue;
                 }
-                double transferValue = 0.0;
+                double transferValue;
                 var transferFrom = splittedString[0].Trim();
                 var transferTo = splittedString[1].Trim().Substring(2, splittedString[1].Length-2);
                 if (double.TryParse(splittedString[2], out transferValue))

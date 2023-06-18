@@ -1,19 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 using WinAct_Helper.Controller;
-using WinAct_Helper.Forms;
 using WinAct_Helper.Model;
 
 namespace WinAct_Helper
 {
-    partial class MainWindow: Window
+	partial class MainWindow: Window
     {
         private void SetMainWindowBindings()
         {
@@ -61,8 +55,8 @@ namespace WinAct_Helper
             var path = InputFileProperty.FullPath;
             this.Title = String.Concat(
                 IsModified ? "* " : "",
-                "WinAct Input Helper - ",
-                path.Length < 65 ? path : "..." + path.Substring(path.Length - 65, 65));
+                "WinAct Input Helper ",
+                string.IsNullOrWhiteSpace(path) ?"" : (path.Length < 65 ? "- " + path : "- ..." + path.Substring(path.Length - 65, 65)));
             
         }
 
