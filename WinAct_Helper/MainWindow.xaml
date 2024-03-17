@@ -39,7 +39,7 @@
             <MenuItem Header="Tools" Visibility="Collapsed"/>
             <MenuItem Header="?">
                 <MenuItem Header="Help"
-                          x:Name="btnMenuHelp"/>
+                          Click="MenuHelp_Click"/>
                 <Separator/>
                 <MenuItem Header="About"
                           x:Name="btnMenuAbout"

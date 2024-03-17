@@ -18,6 +18,7 @@ using WinAct_Helper.Controller;
 using WinAct_Helper.Forms;
 using WinAct_Helper.ViewModels;
 using WinAct_Helper.Services;
+using System.Diagnostics;
 
 namespace WinAct_Helper
 {
@@ -37,6 +38,11 @@ namespace WinAct_Helper
         {
             About formAbout = new About();
             formAbout.ShowDialog();            
+        }
+
+        private void MenuHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo() { UseShellExecute = true, FileName = "https://github.com/VSZ2020/WinAct_Helper/wiki" });
         }
     }
 }

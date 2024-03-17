@@ -20,6 +20,7 @@ namespace WinAct_Helper.ViewModels
         {
             Compartments = new();
             Transfers = new();
+            CreateNewFile();
         }
 
         #region Commands
