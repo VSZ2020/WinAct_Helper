@@ -5,18 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinAct_Helper.Forms"
         mc:Ignorable="d"
-        Title="" Height="182" Width="359" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid
-        Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="27"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
+        Title="" Height="182" Width="359" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Height">
+    <StackPanel Margin="10">
         <TextBlock
             Grid.Row="0"
             FontSize="18"
@@ -56,5 +46,5 @@
             FontSize="8"
             VerticalAlignment="Bottom"
             TextAlignment="Right"/>
-    </Grid>
+    </StackPanel>
 </Window>

@@ -1,16 +1,18 @@
 ﻿<Window x:Class="WinAct_Helper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinAct_Helper"
+        xmlns:uc="clr-namespace:WinAct_Helper.Views"
         mc:Ignorable="d"
         Title="WinAct Input Helper" Height="530" Width="780" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-    <Grid>
+    <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="23"/>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="0.85*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.3*"/>
@@ -19,34 +21,20 @@
         <Menu Grid.Column="0"
               Grid.Row="0"
               Grid.ColumnSpan="2"
-              Margin="0,0,0,5">
+              Margin="0,0,0,5" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <MenuItem Header="File">
-                <MenuItem Header="Create"
-                          x:Name="btnMenuCreate"/>
-                <MenuItem Header="Open"
-                          x:Name="btnMenuOpen"/>
-                <MenuItem Header="Save"
-                          x:Name="btnMenuSave"/>
-                <MenuItem Header="Save as..."
-                          x:Name="btnMenuSaveAs"/>
-                <Separator/>
-                <MenuItem Header="Exit"
-                          x:Name="btnMenuExit"/>
+                <MenuItem Header="Create" Command="{Binding NewFileCommand}"/>
+                <MenuItem Header="Open" Command="{Binding OpenFileCommand}"/>
+                <MenuItem Header="Save" Command="{Binding SaveFileCommand}"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Add compartment"
-                          x:Name="btnMenuAddCompartment"/>
-                <MenuItem Header="Edit compartment"
-                          x:Name="btnMenuEditCompartment"/>
-                <MenuItem Header="Remove compartment"
-                          x:Name="btnMenuRemoveCompartment"/>
+                <MenuItem Header="Add compartment" Command="{Binding AddCompartmentCommand}"/>
+                <MenuItem Header="Edit compartment" Command="{Binding EditCompartmentCommand}"/>
+                <MenuItem Header="Remove compartment" Command="{Binding RemoveCompartmentCommand}"/>
                 <Separator/>
-                <MenuItem Header="Add transfer"
-                          x:Name="btnMenuAddTransfer"/>
-                <MenuItem Header="Edit transfer"
-                          x:Name="btnMenuEditTransfer"/>
-                <MenuItem Header="Remove transfer"
-                          x:Name="btnMenuRemoveTransfer"/>
+                <MenuItem Header="Add transfer" Command="{Binding AddTransferCommand}"/>
+                <MenuItem Header="Edit transfer" Command="{Binding EditTransferCommand}"/>
+                <MenuItem Header="Remove transfer" Command="{Binding RemoveTransferCommand}"/>
             </MenuItem>
             <MenuItem Header="Tools" Visibility="Collapsed"/>
             <MenuItem Header="?">
@@ -54,28 +42,12 @@
                           x:Name="btnMenuHelp"/>
                 <Separator/>
                 <MenuItem Header="About"
-                          x:Name="btnMenuAbout"/>
+                          x:Name="btnMenuAbout"
+                          Click="OnBtnAboutClick"/>
             </MenuItem>
         </Menu>
-        <Grid 
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="10,0,5,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                Grid.Row="0"
-                Text="Radionuclide"
-                FontWeight="Bold"
-                VerticalAlignment="Bottom"
-                Margin="0,0,0,5"/>
+
+        <StackPanel  Grid.Column="0" Grid.Row="1" Margin="10,0,5,0">
             <TextBlock
                 Grid.Column="1"
                 Grid.Row="0"
@@ -83,44 +55,14 @@
                 FontWeight="Bold"
                 Margin="0,0,0,5"
                 VerticalAlignment="Bottom"/>
-            <ComboBox
-                Grid.Column="0"
-                Grid.Row="1"
-                x:Name="cBoxRadionuclides"
-                ItemsSource="{Binding RadionuclidesProperty.Nuclides}"
-                DisplayMemberPath="Name"
-                VerticalContentAlignment="Center"
-                Margin="0,0,3,0"/>
-            <TextBox
-                Grid.Column="1"
-                Grid.Row="1"
-                x:Name="tboxHalfTime"
-                Text="{Binding ElementName=cBoxRadionuclides, Path=SelectedItem.HalfTime, Mode=Default}"
-                VerticalContentAlignment="Center"/>
-        </Grid>
-        <StackPanel Grid.Column="1"
-              Grid.Row="1"
-              Margin="5,0,10,0">
-                <TextBlock Text="Comments (first 2 lines of file)" 
-                           Margin="0,0,0,3"
-                           FontWeight="Bold"
-                           Height="18"/>
-                <TextBox x:Name="tboxComment"
-                         Text="{Binding InputFileProperty.Comment_1}"
-                         MaxLines="2"
-                         Margin="0,0,0,3"
-                         Height="21"
-                         VerticalContentAlignment="Center"/>
-                <TextBox x:Name="tboxComment2"
-                         Text="{Binding InputFileProperty.Comment_2}"
-                         MaxLines="1"
-                         Height="21"
-                         VerticalContentAlignment="Center"/>
-            </StackPanel>
-        <Grid
-            Grid.Column="0"
-            Grid.Row="2"
-            Margin="10,0,5,10">
+            <TextBox Grid.Column="1" Grid.Row="1" Height="21" Text="{Binding HalfLive}" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1"  Grid.Row="1" Margin="5,0,10,10">
+            <TextBlock Text="Comments (first 2 lines of file)"  Margin="0,0,0,3" FontWeight="Bold" Height="18"/>
+            <TextBox Text="{Binding CommentLine1}" MaxLines="2" Margin="0,0,0,5" Height="21" VerticalContentAlignment="Center"/>
+            <TextBox Text="{Binding CommentLine2}" MaxLines="1" Height="21" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <Grid Grid.Column="0" Grid.Row="2" Margin="10,0,5,10">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="25"/>
@@ -128,16 +70,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListView
-                x:Name="lvCompartments"
-                Margin="0,0,0,5"
-                Grid.Column="0"
-                Grid.Row="0"
-                ItemsSource="{Binding InputFileProperty.Compartments}">
+            <ListView Margin="0,0,0,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Compartments}" SelectedItem="{Binding SelectedCompartment}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Name}">Compartment</GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding A0}" Width="70">A0</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding A0}" Width="70">A0, Bq</GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -149,25 +86,12 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btnAddCompartment"
-                    Content="+"
-                    Grid.Column="0"
-                    Margin="0,0,2,0"/>
-                <Button 
-                    x:Name="btnEditCompartment"
-                    Content="Edit"
-                    Grid.Column="1"
-                    Margin="0,0,2,0"/>
-                <Button x:Name="btnRemoveCompartment"
-                    Content="-"
-                    Grid.Column="2"
-                    Margin="0,0,0,0"/>
+                <Button Command="{Binding AddCompartmentCommand}" Content="+" Grid.Column="0" Margin="0,0,5,0" Style="{StaticResource DefaultButton}"/>
+                <Button Command="{Binding EditCompartmentCommand}" Content="Edit" Grid.Column="1" Margin="0,0,5,0" Style="{StaticResource DefaultButton}"/>
+                <Button Command="{Binding RemoveCompartmentCommand}" Content="-" Grid.Column="2" Margin="0,0,0,0" Style="{StaticResource DefaultButton}"/>
             </Grid>
         </Grid>
-        <Grid
-            Grid.Column="1"
-            Grid.Row="2"
-            Margin="5, 0, 10, 10">
+        <Grid Grid.Column="1" Grid.Row="2" Margin="5, 0, 10, 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
@@ -175,11 +99,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListView x:Name="lvTransfers"
-                      Margin="0,0,0,5" 
-                      Grid.Column="0"
-                      Grid.Row="0"
-                      ItemsSource="{Binding InputFileProperty.Transfers}">
+            <ListView Margin="0,0,0,5"  Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Transfers}" SelectedItem="{Binding SelectedTransfer}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding From}" Width="120">From</GridViewColumn>
@@ -196,21 +116,18 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button 
-                    x:Name="btnAddTransfer"
-                    Content="Add"
-                    Grid.Column="0"
-                    Margin="0,0,2,0"/>
-                <Button 
-                    x:Name="btnEditTransfer"
-                    Content="Edit"
-                    Grid.Column="1"
-                    Margin="0,0,2,0"/>
-                <Button 
-                    x:Name="btnRemoveTransfer"
-                    Content="Remove"
-                    Grid.Column="2"/>
+                <Button Command="{Binding AddTransferCommand}" Content="Add" Grid.Column="0" Margin="0,0,5,0" Style="{StaticResource DefaultButton}"/>
+                <Button Command="{Binding EditTransferCommand}" Content="Edit" Grid.Column="1" Margin="0,0,5,0" Style="{StaticResource DefaultButton}"/>
+                <Button Command="{Binding RemoveTransferCommand}" Content="Remove" Grid.Column="2" Style="{StaticResource DefaultButton}"/>
             </Grid>
         </Grid>
+
+        <uc:ValidationErrorsView Margin="0,5,0,0" Grid.Row="3" Grid.ColumnSpan="2"/>
+
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
+            <StatusBarItem>
+                <TextBlock Text="{Binding FilePath}" TextWrapping="Wrap" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,5,5,5"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

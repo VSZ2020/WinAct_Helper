@@ -15,41 +15,28 @@ using System.Windows.Shapes;
 
 using WinAct_Helper.Model;
 using WinAct_Helper.Controller;
+using WinAct_Helper.Forms;
+using WinAct_Helper.ViewModels;
+using WinAct_Helper.Services;
 
 namespace WinAct_Helper
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        IUserPreferences preferences;
-        public Radionuclides RadionuclidesProperty { get; set; }
-        public InputFile InputFileProperty { get; set; }
-
         public MainWindow()
         {
+            vm = new MainWindowVM();
+            DataContext = vm;
+
             InitializeComponent();
-            InitializeProgram();
         }
 
-        private void InitializeProgram()
-        {
-            preferences = new UserPreferencesController();
-            preferences.LoadPreferences(preferences.PreferencesPath);
-            RadionuclidesProperty = new Radionuclides();
-            RadionuclidesProperty.ReadFromFile(new RadionuclideTextReader(), Radionuclides.RadionuclidesFilePath);
-            LoadDefaultInput();
-            SetMainWindowBindings();
-            SetButtonEventHandlers();
-        }
+        private MainWindowVM vm;
 
-        private void LoadDefaultInput()
+        private void OnBtnAboutClick(object sender, RoutedEventArgs e)
         {
-            this.DataContext = null;
-            InputFileProperty = (new DefaultDataController(RadionuclidesProperty)).CreateDefaultInput();
-            this.DataContext = this;
-            UpdateModifiedStatus(true);
+            About formAbout = new About();
+            formAbout.ShowDialog();            
         }
     }
 }

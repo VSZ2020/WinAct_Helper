@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using WinAct_Helper.Model;
 
-namespace WinAct_Helper.Controller
+namespace WinAct_Helper.Services
 {
-    internal class RadionuclideTextReader : IRadionuclideReader
+    internal class RadionuclideTextReader
     {
         public List<Radionuclide> ReadFile(string fileName)
         {
-            var radionuclides = new List<Radionuclide>() { DefaultDataController.GetDefaultRadionuclide()};
+            var radionuclides = new List<Radionuclide>() { DefaultDataProvider.GetDefaultRadionuclide() };
             using (StreamReader reader = new StreamReader(fileName))
             {
                 string? line;

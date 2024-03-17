@@ -5,11 +5,12 @@ using System.Text;
 using System.Diagnostics;
 
 using WinAct_Helper.Model;
+using WinAct_Helper.Services;
 
 
 namespace WinAct_Helper.Controller
 {
-    internal class InputFileTextIO : IFileIO
+    internal class InputFileService
     {
         /// <summary>
         /// Read input file
@@ -17,14 +18,16 @@ namespace WinAct_Helper.Controller
         /// <param name="fileName"></param>
         /// <returns></returns>
         /// <exception cref="FileNotFoundException"></exception>
-        public InputFile ReadFile(string fileName)
+        public static InputFile ReadFile(string fileName)
         {
             if (!File.Exists(fileName))
                 throw new FileNotFoundException($"Can't find file at path {fileName}");
-            string[] inputFileComment = { "", ""};
-            Radionuclide rNuclide = DefaultDataController.GetDefaultRadionuclide();
-            List<Compartment> compartments = new List<Compartment>();
-            List<Transfer> transfers = new List<Transfer>(); 
+
+            string[] inputFileComment = {"", ""};
+            double halflive = 0;
+            var compartments = new List<Compartment>();
+            var transfers = new List<Transfer>(); 
+
             using (StreamReader rd = new StreamReader(fileName))
             {
                 string? line = "";
@@ -50,10 +53,7 @@ namespace WinAct_Helper.Controller
                         double defaultHalfTime = 0.0;
                         if (splittedLine.Length > 1 && double.TryParse(splittedLine[1], out defaultHalfTime))
                         {
-                            rNuclide = GetFromDatabase(
-                                defaultHalfTime, 
-                                new RadionuclideTextReader(), 
-                                Radionuclides.RadionuclidesFilePath);
+                            halflive = defaultHalfTime;
                         }
                         else
                         {
@@ -63,11 +63,12 @@ namespace WinAct_Helper.Controller
                         
                     if (line.IndexOf("COMPARTMENTS") > -1)
                         compartments = ReadCompartments(rd);
+
                     if (line.IndexOf("TRANSFERS") > -1)
                         transfers = ReadTransfers(rd);
                 }
             }
-            return new InputFile(fileName, rNuclide, compartments, transfers) { Comment_1 = inputFileComment[0], Comment_2 = inputFileComment[1] };
+            return new InputFile(fileName, halflive, compartments, transfers) { Comment_1 = inputFileComment[0], Comment_2 = inputFileComment[1] };
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace WinAct_Helper.Controller
         /// </summary>
         /// <param name="outFileName"></param>
         /// <param name="file"></param>
-        public void WriteFile(string outFileName, InputFile file)
+        public static void WriteFile(string outFileName, InputFile file)
         {
             //if (!File.Exists(outFileName))
             //{
@@ -87,7 +88,7 @@ namespace WinAct_Helper.Controller
                 StringBuilder lines = new StringBuilder();
                 lines.AppendLine(file.Comment_1);
                 lines.AppendLine(file.Comment_2);
-                lines.AppendLine(String.Format("THALF {0:E4}",file.Radionuclide.HalfTime));
+                lines.AppendLine(String.Format("THALF {0:E4}",file.HalfLive));
                 lines.AppendLine("COMPARTMENTS  A(0)                     <- Delimiter for initial condition block");
                 for (int i = 0; i < file.Compartments.Count; i++)
                 {
@@ -114,28 +115,13 @@ namespace WinAct_Helper.Controller
 
         }
 
-        private Radionuclide GetFromDatabase(double halfTime, IRadionuclideReader reader, string dbPath)
-        {
-            var nuclideList = reader.ReadFile(dbPath);
-            if (nuclideList != null)
-                for (int i = 0; i < nuclideList.Count; i++)
-                {
-                    if (Math.Abs(nuclideList[i].HalfTime - halfTime) < 1E-6)
-                    {
-                        return nuclideList[i];
-                    }
-                }
-            Trace.WriteLine($"One can't find radionuclide from user file. It will be added to database");
-            return new Radionuclide("User-defined", halfTime);
-            //return DefaultDataController.GetDefaultRadionuclide();
-        }
 
         /// <summary>
         /// Read compartments from input file
         /// </summary>
         /// <param name="sr"></param>
         /// <returns></returns>
-        private List<Compartment> ReadCompartments(StreamReader sr)
+        private static List<Compartment> ReadCompartments(StreamReader sr)
         {
             int lineCounter = 0;
             string line;
@@ -178,7 +164,7 @@ namespace WinAct_Helper.Controller
         /// </summary>
         /// <param name="sr"></param>
         /// <returns></returns>
-        private List<Transfer> ReadTransfers(StreamReader sr)
+        private static List<Transfer> ReadTransfers(StreamReader sr)
         {
             string line = "";
             int lineCounter = 0;

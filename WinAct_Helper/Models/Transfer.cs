@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using WinAct_Helper.Common;
 
 namespace WinAct_Helper.Model
 {
-    public class Transfer
+    public class Transfer : BaseViewModel
     {
         const int MAX_FROM_LENGTH = 9;
         const int MAX_TO_LENGTH = 11;
         private string _from;
         private string _to;
+        private double _time;
+
         public string From
         {
             get => _from;
             set
             {
                 _from = (value.Length <= MAX_FROM_LENGTH) ? value : value.Substring(0, MAX_FROM_LENGTH);
+                OnChanged();
             }
         }
         public string To
@@ -26,13 +26,14 @@ namespace WinAct_Helper.Model
             set
             {
                 _to = (value.Length <= MAX_TO_LENGTH) ? value : value.Substring(0, MAX_TO_LENGTH);
+                OnChanged();
             }
         }
 
         /// <summary>
         /// Transfer duration in days
         /// </summary>
-        public double Time { get; set; } = 0.0;
+        public double Time { get => _time; set { _time = value; OnChanged(); } }
 
         public Transfer(string from, string to):this(from, to, 0.0) { }
 

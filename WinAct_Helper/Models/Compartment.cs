@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WinAct_Helper.Common;
 
 namespace WinAct_Helper.Model
 {
-    public class Compartment
+    public class Compartment: BaseViewModel
     {
         const int MAX_NAME_LENGTH = 10;
         private string _name = "";
+        private double _a0;
+
         public string Name {
             get => _name;
             set {
-                _name = (value.Length <= MAX_NAME_LENGTH) ? value : value.Substring(0,MAX_NAME_LENGTH);
+                _name = (value.Length <= MAX_NAME_LENGTH) ? value : value.Substring(0, MAX_NAME_LENGTH);
+                OnChanged();
             }
         }
-        public double A0 { get; set; }
+        public double A0 { get => _a0; set { _a0 = value; OnChanged(); } }
 
         public Compartment(string name, double InitA0)
         {

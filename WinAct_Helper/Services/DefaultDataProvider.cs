@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using WinAct_Helper.Model;
 
-namespace WinAct_Helper.Controller
+namespace WinAct_Helper.Services
 {
-	internal class DefaultDataController
+    public class DefaultDataProvider
     {
-        private Radionuclides _radionuclides;
-
-        public DefaultDataController(Radionuclides LoadedRadionuclides)
-        {
-            _radionuclides = LoadedRadionuclides;
-        }
-
-        public InputFile CreateDefaultInput()
+        public static InputFile CreateDefaultInput()
         {
             var input = new InputFile(
                 "",//Path.Combine(System.Environment.CurrentDirectory,string.Concat("Untitled.", DefaultExtensions.INPUT_FILE_EXTENSION)),
-                _radionuclides.GetByIndex(0),
+                0.0,
                 GetDefaultCompartments(5),
-                GetDefaultTransfers(5)){ 
-                Comment_1 = "Default input file", 
-                Comment_2 = "Creation time " + DateTime.Now.ToString("dd.MM.yyyy HH:mm"), 
-                IsModified = true };
+                GetDefaultTransfers(5))
+            {
+                Comment_1 = "Default input file",
+                Comment_2 = "Created at " + DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+            };
             return input;
         }
 
@@ -31,7 +24,7 @@ namespace WinAct_Helper.Controller
         {
             List<Compartment> comps = new List<Compartment>(count);
             for (int i = 0; i < count; i++)
-                comps.Add(new Compartment(string.Concat("Compart-", i+1)));
+                comps.Add(new Compartment(string.Concat("Compart-", i + 1)));
             return comps;
         }
 
@@ -39,7 +32,7 @@ namespace WinAct_Helper.Controller
         {
             List<Transfer> transf = new List<Transfer>(count);
             for (int i = 0; i < count; i++)
-                transf.Add(new Transfer(string.Concat("From-", i+1), string.Concat("To-", i+1)));
+                transf.Add(new Transfer(string.Concat("From-", i + 1), string.Concat("To-", i + 1)));
             return transf;
         }
 
