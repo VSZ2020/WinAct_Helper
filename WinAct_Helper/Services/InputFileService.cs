@@ -106,7 +106,7 @@ namespace WinAct_Helper.Controller
                         "{0,-10}->{1,-11}{2,-10:E4}",
                         file.Transfers[i].From,
                         file.Transfers[i].To,
-                        file.Transfers[i].Time));
+                        file.Transfers[i].Constant));
                 }
                 lines.AppendLine("EOF Data");
                 wr.Write(lines);

@@ -28,6 +28,7 @@ namespace WinAct_Helper.Forms
         {
             if (vm.ValidateInputs())
             {
+                vm.Transfer.Constant = vm.Transfer.Constant * vm.ConvertUnits(vm.SelectedUnits);
                 IsSuccess = true;
                 this.Transfer = vm.Transfer;
                 this.Close();

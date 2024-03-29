@@ -5,13 +5,17 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <AssemblyVersion>1.0.1.1</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Views\EditCompartmentForm.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Images\ICRP\" />
   </ItemGroup>
 
 </Project>

@@ -104,7 +104,7 @@
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding From}" Width="120">From</GridViewColumn>
                         <GridViewColumn DisplayMemberBinding="{Binding To}" Width="120">To</GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Time}">Duration (days)</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Constant}">Transfer Constant (1/d)</GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

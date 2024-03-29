@@ -6,7 +6,7 @@
         xmlns:uc="clr-namespace:WinAct_Helper.Views"
         xmlns:local="clr-namespace:WinAct_Helper.Forms"
         mc:Ignorable="d"
-        Title="Item editing" Height="160" Width="476" WindowStartupLocation="CenterScreen" SizeToContent="Height">
+        Title="Item editing" Height="232" Width="476" WindowStartupLocation="CenterScreen" SizeToContent="Height">
     <Grid
         Margin="10">
         <Grid.RowDefinitions>
@@ -25,15 +25,22 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="From"/>
                 <TextBlock Grid.Column="1" Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" Text="To"/>
-                <TextBlock Grid.Column="2" Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" Text="Time (days)"/>
+                <TextBlock Grid.Column="2" Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" Text="Time"/>
+                <TextBlock Grid.Column="3" Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" Text="Units"/>
+                
                 <TextBox Grid.Column="0" Grid.Row="1" Margin="0,0,5,0" Text="{Binding Transfer.From}" MaxLength="10"/>
-                <TextBox Grid.Column="1"  Grid.Row="1" Margin="0,0,5,0" Text="{Binding Transfer.To}" MaxLength="10"/>
-                <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding Transfer.Time}"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="0,0,5,0" Text="{Binding Transfer.To}" MaxLength="10"/>
+                <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding Transfer.Constant}"/>
+                <ComboBox Grid.Column="3" Grid.Row="1" ItemsSource="{Binding ConstantUnitsDict}" SelectedValue="{Binding SelectedUnits}" SelectedValuePath="Key" DisplayMemberPath="Value" Margin="5,0,0,0"/>
             </Grid>
+            <TextBlock Text="'FROM' field contains initial compartment name (Max length is 10 symbols). &#x0a;'TO' field contains target transfer compartment name (Max length is 10 symbols). &#x0a;'TIME' field has transfer speed constant, expressed in selected units. &#x0a;Note: if the selected unit of measure is not 1/d (one per day), then it will be converted to 1/d.&#x0a;Designations: 1/d - per day, 1/m - per month, 1/y - per year, 1/h - per hour, 1/min - per min, 1/s - per second" 
+                       Foreground="Gray"
+                       TextWrapping="Wrap" Margin="0,0,0,5"/>
             <uc:ValidationErrorsView Margin="0,0,0,5"/>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">

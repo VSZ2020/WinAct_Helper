@@ -9,7 +9,7 @@ namespace WinAct_Helper.Model
         const int MAX_TO_LENGTH = 11;
         private string _from;
         private string _to;
-        private double _time;
+        private double _constant;
 
         public string From
         {
@@ -33,20 +33,20 @@ namespace WinAct_Helper.Model
         /// <summary>
         /// Transfer duration in days
         /// </summary>
-        public double Time { get => _time; set { _time = value; OnChanged(); } }
+        public double Constant { get => _constant; set { _constant = value; OnChanged(); } }
 
         public Transfer(string from, string to):this(from, to, 0.0) { }
 
-        public Transfer(string from, string to, double duration)
+        public Transfer(string from, string to, double constant)
         {
             this.From = from;
             this.To = to;
-            this.Time = duration;
+            this.Constant = constant;
         }
 
         public Transfer Copy()
         {
-            return new Transfer(this.From, this.To, this.Time);
+            return new Transfer(this.From, this.To, this.Constant);
         }
     }
 }
